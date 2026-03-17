@@ -2,12 +2,35 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useFocusStore } from "@/hooks/use-focus-store"
+import { useHabitStore } from "@/hooks/use-habit-store"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useMemo } from "react"
 
 interface HomePageProps {
   onNavigate: (page: "timer" | "habits" | "insights") => void
 }
 
 export default function HomePage({ onNavigate }: HomePageProps) {
+  const { sessions, loading: sessionsLoading } = useFocusStore()
+  const { habits, loading: habitsLoading } = useHabitStore()
+
+  const stats = useMemo(() => {
+    const totalSessions = sessions.length
+    const totalMinutes = sessions.reduce((sum, s) => sum + s.duration, 0)
+    const totalHours = Math.round((totalMinutes / 60) * 10) / 10
+    const totalHabits = habits.length
+
+    // Calculate completion rate for today
+    const today = new Date().toDateString()
+    const completedToday = habits.filter((h) => h.completedDates.includes(today)).length
+    const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0
+
+    return { totalSessions, totalHours, totalHabits, completionRate }
+  }, [sessions, habits])
+
+  const isLoading = sessionsLoading || habitsLoading
+
   return (
     <div className="space-y-8">
       <div className="text-center space-y-4">
@@ -95,19 +118,35 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <h2 className="text-2xl font-bold mb-4">Quick Stats</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
-            <div className="text-3xl font-bold text-primary">0</div>
+            {isLoading ? (
+              <Skeleton className="h-9 w-16 mb-1" />
+            ) : (
+              <div className="text-3xl font-bold text-primary">{stats.totalSessions}</div>
+            )}
             <p className="text-sm text-muted-foreground">Focus Sessions</p>
           </div>
           <div>
-            <div className="text-3xl font-bold text-primary">0</div>
+            {isLoading ? (
+              <Skeleton className="h-9 w-16 mb-1" />
+            ) : (
+              <div className="text-3xl font-bold text-primary">{stats.totalHours}</div>
+            )}
             <p className="text-sm text-muted-foreground">Hours Focused</p>
           </div>
           <div>
-            <div className="text-3xl font-bold text-primary">0</div>
+            {isLoading ? (
+              <Skeleton className="h-9 w-16 mb-1" />
+            ) : (
+              <div className="text-3xl font-bold text-primary">{stats.totalHabits}</div>
+            )}
             <p className="text-sm text-muted-foreground">Habits Tracked</p>
           </div>
           <div>
-            <div className="text-3xl font-bold text-primary">0%</div>
+            {isLoading ? (
+              <Skeleton className="h-9 w-16 mb-1" />
+            ) : (
+              <div className="text-3xl font-bold text-primary">{stats.completionRate}%</div>
+            )}
             <p className="text-sm text-muted-foreground">Completion Rate</p>
           </div>
         </div>
