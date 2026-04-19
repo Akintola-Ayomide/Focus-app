@@ -9,10 +9,6 @@ Focus Flow is a solid frontend-only productivity tool with a Pomodoro timer, hab
 
 ## Phase 1: Core SaaS Foundation & Specialized Backend
 The first step is shifting away from `localStorage` by building a dedicated backend. Ensuring data is securely managed, persisted, and easily extendable via a specialized server architecture is critical.
-- [ ] **Specialized Backend Setup**: 
-   - Architect a custom, decoupled backend API (e.g., Express.js, NestJS, etc.) to handle complex business logic, third-party integrations, and automated jobs.
-   - (Optional) Refactor the project into a Monorepo structure (e.g., Turborepo) housing both the Next.js frontend and the specialized backend API side-by-side.
-- [ ] **Complete Authentication Setup**: Finalize the user authentication (JWT-based or Supabase Auth) to secure the new backend endpoints. Ensure robust route protection on both the frontend and API levels.
 - [ ] **Database Migration & ORM**: 
    - Integrate a PostgreSQL database pairing with an ORM like Prisma or Drizzle within the specialized backend.
    - Design schemas for `Users`, `FocusSessions`, `Habits`, and `HabitLogs`.

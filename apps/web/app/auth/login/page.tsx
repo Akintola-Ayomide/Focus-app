@@ -1,8 +1,6 @@
 "use client"
 
 import type React from "react"
-
-import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -20,16 +18,20 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       })
-      if (error) throw error
+      const data = await response.json()
+      
+      if (!response.ok) throw new Error(data.error || "An error occurred")
+      
+      // Assume successful login returns token as cookie
       router.push("/dashboard")
       router.refresh()
     } catch (error: unknown) {
@@ -37,6 +39,10 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/auth/google`
   }
 
   return (
@@ -69,7 +75,12 @@ export default function LoginPage() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
+                    <div className="flex items-center">
+                      <Label htmlFor="password">Password</Label>
+                      <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                        Forgot your password?
+                      </Link>
+                    </div>
                     <Input
                       id="password"
                       type="password"
@@ -81,6 +92,9 @@ export default function LoginPage() {
                   {error && <p className="text-sm text-destructive">{error}</p>}
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign in"}
+                  </Button>
+                  <Button variant="outline" className="w-full" type="button" onClick={handleGoogleLogin}>
+                    Login with Google
                   </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">
