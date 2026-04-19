@@ -1,16 +1,25 @@
 import { Router } from 'express';
 import passport from 'passport';
+import rateLimit from 'express-rate-limit';
 import { register, login, logout, getCurrentUser, verifyEmail, forgotPassword, resetPassword } from '../controllers/authController';
 import { authenticate } from '../middlewares/authMiddleware';
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // limit each IP to 20 requests per windowMs
+  message: { error: 'Too many requests from this IP, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const router = Router();
 
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', authLimiter, register);
+router.post('/login', authLimiter, login);
 router.post('/logout', logout);
 router.get('/verify-email', verifyEmail);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/forgot-password', authLimiter, forgotPassword);
+router.post('/reset-password', authLimiter, resetPassword);
 router.get('/me', authenticate, getCurrentUser);
 
 // Google OAuth

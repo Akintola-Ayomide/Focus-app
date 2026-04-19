@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "A modern app to manage focus sessions, track habits, and visualize your productivity",
 }
 
+import { AuthProvider } from "@/hooks/use-auth"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,9 @@ export default function RootLayout({
         `}</style>
       </head>
       <body className={`font-sans antialiased`}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

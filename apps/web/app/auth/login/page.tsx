@@ -9,12 +9,15 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+import { useAuth } from "@/hooks/use-auth"
+import { apiFetch } from "@/lib/api-client"
+
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const { login } = useAuth()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,18 +25,15 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/auth/login`, {
+      const response = await apiFetch('/auth/login', {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
       const data = await response.json()
       
       if (!response.ok) throw new Error(data.error || "An error occurred")
       
-      // Assume successful login returns token as cookie
-      router.push("/dashboard")
-      router.refresh()
+      login(data.user)
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
@@ -42,7 +42,8 @@ export default function LoginPage() {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/auth/google`
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+    window.location.href = `${apiUrl}/auth/google`
   }
 
   return (

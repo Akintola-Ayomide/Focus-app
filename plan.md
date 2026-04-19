@@ -9,6 +9,12 @@ Focus Flow is a solid frontend-only productivity tool with a Pomodoro timer, hab
 
 ## Phase 1: Core SaaS Foundation & Specialized Backend
 The first step is shifting away from `localStorage` by building a dedicated backend. Ensuring data is securely managed, persisted, and easily extendable via a specialized server architecture is critical.
+- [x] **Secure Authentication Infrastructure**: 
+   - Implemented custom JWT-based authentication with secure HTTP-only cookies.
+   - Integrated Google OAuth 2.0 via Passport.js.
+   - Added Email Verification and Password Reset flows with SMTP support.
+   - Hardened security with API Rate Limiting and Next.js Route Middleware.
+   - Established global AuthContext for seamless frontend user state management.
 - [ ] **Database Migration & ORM**: 
    - Integrate a PostgreSQL database pairing with an ORM like Prisma or Drizzle within the specialized backend.
    - Design schemas for `Users`, `FocusSessions`, `Habits`, and `HabitLogs`.
