@@ -1,228 +1,140 @@
-# Focus Flow
+# Focus Flow - Full-Stack Productivity SaaS
 
-A  productivity web app that helps you manage focus sessions, track daily habits, and visualize your productivity trends. Built with Next.js, TypeScript, and TailwindCSS for a seamless, responsive experience.
+A powerful, full-stack productivity web application designed to help you manage focus sessions, track daily habits, and visualize your productivity trends. Built with a modern specialized backend and a premium Next.js frontend.
 
-## Live Demo
+## 🚀 Live Demo
 
-https://focus-flow.vercel.app
+[https://focus-flow.vercel.app](https://focus-flow.vercel.app)
 
+---
 
-
-## Problem & Solution
+## ✨ Features & Solution
 
 Staying focused in today's distracted world is challenging. Focus Flow solves this by providing:
 
-- **Pomodoro Timer**: Structured focus sessions with customizable durations (15, 25, or 45 minutes)
-- **Habit Tracking**: Build and maintain daily habits with visual streak tracking
-- **Productivity Insights**: Visualize your focus patterns and habit completion rates over time
-- **Persistent Storage**: All data is saved locally—no backend required, complete privacy
+- **Specialized Backend Architecture**: A dedicated Express.js API for complex business logic, security, and scalability.
+- **Secure Authentication Infrastructure**:
+  - Custom JWT-based authentication with secure HTTP-only cookies.
+  - Multi-strategy support: Traditional Email/Password + Google OAuth 2.0.
+  - Full Auth Lifecycle: Registration, Email Verification, Forgot/Reset Password.
+  - Hardened security with API Rate Limiting and Next.js Middleware route protection.
+- **Pomodoro Timer**: Structured focus sessions with customizable durations.
+- **Habit Tracking**: Build and maintain daily habits with visual streak tracking and persistent database storage.
+- **Productivity Insights**: Visualize your focus patterns and habit completion rates with real-time data from the API.
 
-## Tech Stack
+---
 
-- **Framework**: [Next.js 15](https://nextjs.org) with App Router
+## 🛠 Tech Stack
+
+### Frontend (apps/web)
+- **Framework**: [Next.js 15](https://nextjs.org) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org)
-- **Styling**: [TailwindCSS v4](https://tailwindcss.com)
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com)
+- **State Management**: React Context (AuthProvider) + Global API Client
+- **Styling**: [TailwindCSS v4](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com)
 - **Charts**: [Recharts](https://recharts.org)
-- **Testing**: [Jest](https://jestjs.io) + [React Testing Library](https://testing-library.com/react)
-- **State Management**: Custom hooks with localStorage persistence
-- **Deployment**: [Vercel](https://vercel.com)
 
-## Key Features
+### Backend (apps/api)
+- **Runtime**: [Node.js](https://nodejs.org) / [Express.js](https://expressjs.com)
+- **Database/ORM**: [PostgreSQL](https://www.postgresql.org) + [Prisma ORM](https://www.prisma.io)
+- **Security**: [Passport.js](https://www.passportjs.org) (Google OAuth), [Helmet](https://helmetjs.github.io), [express-rate-limit](https://www.npmjs.com/package/express-rate-limit), [bcryptjs](https://www.npmjs.com/package/bcryptjs).
+- **Communication**: [Nodemailer](https://nodemailer.com) for authentication emails.
 
-### Focus Timer
-- Pomodoro-style timer with preset durations (15, 25, 45 minutes)
-- Automatic break transitions between sessions
-- Session history tracking with completion statistics
-- Audio notifications for session completion
-- Keyboard shortcuts for quick control
+### Infrastructure
+- **Monorepo Tooling**: [Turborepo](https://turbo.build)
+- **Package Manager**: [pnpm](https://pnpm.io)
+- **Deployment**: [Vercel](https://vercel.com) (Frontend) + Render/Railway (API)
 
-### Habit Tracker
-- Create and manage daily habits with custom names and icons
-- Track daily completion with visual checkmarks
-- Streak counter to maintain motivation
-- Edit and delete habits as needed
-- Persistent storage across browser sessions
+---
 
-### Insights Dashboard
-- 7-day focus session trend visualization
-- Habit completion rate charts
-- Real-time statistics and metrics
-- Responsive charts that work on all screen sizes
-- Dark mode optimized visualizations
+## 🏗 Project Structure
 
-### Dark Mode
-- Automatic theme detection based on system preferences
-- Manual toggle for light/dark mode
-- Persistent theme preference
-- Smooth transitions between themes
-- WCAG compliant color contrast
-
-## Project Structure
-
-\`\`\`
+```
 focus-flow/
-├── app/
-│   ├── layout.tsx           # Root layout with metadata and theme setup
-│   ├── page.tsx             # Main app shell with navigation
-│   └── globals.css          # Global styles and design tokens
-├── components/
-│   ├── pages/               # Page-level components
-│   │   ├── home-page.tsx
-│   │   ├── focus-timer-page.tsx
-│   │   ├── habit-tracker-page.tsx
-│   │   └── insights-page.tsx
-│   ├── focus-timer.tsx      # Pomodoro timer component
-│   ├── focus-chart.tsx      # Focus trends visualization
-│   ├── habit-form.tsx       # Habit creation form
-│   ├── habit-list.tsx       # Habit display and management
-│   ├── habit-chart.tsx      # Habit completion visualization
-│   ├── session-history.tsx  # Focus session history
-│   ├── navigation.tsx       # Main navigation component
-│   ├── theme-toggle.tsx     # Dark mode toggle
-│   └── ui/                  # Reusable shadcn/ui components
-├── hooks/
-│   ├── use-focus-store.ts   # Focus session state management
-│   ├── use-habit-store.ts   # Habit state management
-│   ├── use-mobile.ts        # Mobile detection hook
-│   └── use-toast.ts         # Toast notifications hook
-├── lib/
-│   └── utils.ts             # Utility functions (cn, etc.)
-├── __tests__/
-│   ├── hooks/               # Hook unit tests
-│   └── components/          # Component tests
-├── jest.config.js           # Jest configuration
-├── jest.setup.js            # Jest setup file
-├── next.config.mjs          # Next.js configuration
-├── tsconfig.json            # TypeScript configuration
-└── package.json             # Dependencies and scripts
-\`\`\`
+├── apps/
+│   ├── api/                 # Express backend
+│   │   ├── prisma/          # Database schema & migrations
+│   │   └── src/
+│   │       ├── config/      # Auth & Passport strategies
+│   │       ├── controllers/ # Request handlers
+│   │       ├── middlewares/ # Auth & Security guards
+│   │       └── routes/      # API endpoint definitions
+│   └── web/                 # Next.js frontend
+│       ├── app/             # App Router pages
+│       ├── components/      # UI & Logic components
+│       ├── hooks/           # Global useAuth and custom hooks
+│       └── lib/             # API Client & Utilities
+├── package.json             # Root monorepo scripts
+└── turbo.json               # Pipeline configuration
+```
 
-## Installation & Setup
+---
+
+## ⚙️ Installation & Setup
 
 ### Prerequisites
+- Node.js 18+ 
+- pnpm (recommended)
+- PostgreSQL database instance
 
-- Node.js 18+ or higher
-- npm, yarn, pnpm, or bun
-
-### Clone & Install
-
-\`\`\`bash
-# Clone the repository
+### 1. Clone & Install
+```bash
 git clone https://github.com/yourusername/focus-flow.git
 cd focus-flow
-
-# Install dependencies
-npm install
-# or
 pnpm install
-# or
-yarn install
-\`\`\`
+```
 
-### Run Locally
+### 2. Environment Setup
+Create a `.env` file in `apps/api` and `apps/web`.
 
-\`\`\`bash
-# Start the development server
-npm run dev
+**apps/api/.env:**
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/focusflow"
+JWT_SECRET="your_jwt_secret"
+GOOGLE_CLIENT_ID="your_google_id"
+GOOGLE_CLIENT_SECRET="your_google_secret"
+SMTP_HOST="smtp.example.com"
+SMTP_PORT=587
+SMTP_USER="user@example.com"
+SMTP_PASS="password"
+FRONTEND_URL="http://localhost:3000"
+```
 
-# Open http://localhost:3000 in your browser
-\`\`\`
+**apps/web/.env:**
+```env
+NEXT_PUBLIC_API_URL="http://localhost:5000/api"
+```
 
-### Build for Production
+### 3. Database Initialization
+```bash
+cd apps/api
+pnpx prisma generate
+pnpx prisma db push
+```
 
-\`\`\`bash
-# Create an optimized production build
-npm run build
+### 4. Run Development
+```bash
+# From the root directory
+pnpm dev
+```
+- API starts at `http://localhost:5000`
+- Web starts at `http://localhost:3000`
 
-# Start the production server
-npm start
-\`\`\`
+---
 
-## Testing
+## 🔒 Security Focus
 
-The project includes comprehensive unit tests for hooks and components using Jest and React Testing Library.
+- **Password Hashing**: Uses `bcryptjs` with high salt rounds.
+- **Route Guards**: Next.js Middleware blocks unauthenticated traffic before components even mount.
+- **HTTP-Only Cookies**: JWTs are stored in secure cookies to prevent XSS-based token theft.
+- **Input Validation**: Zero-trust approach using Prisma schemas and zod-based frontend validation.
+- **Rate Limiting**: Brute-force protection on all auth endpoints.
 
-### Run Tests
+---
 
-\`\`\`bash
-# Run all tests
-npm test
+## 🤝 Acknowledgments
 
-# Run tests in watch mode
-npm test -- --watch
-
-# Run tests with coverage
-npm test -- --coverage
-\`\`\`
-
-### Test Files
-
-- `__tests__/hooks/use-focus-store.test.ts` - Focus timer state management tests
-- `__tests__/hooks/use-habit-store.test.ts` - Habit tracker state management tests
-- `__tests__/components/focus-timer.test.tsx` - Focus timer component tests
-
-## Performance & Optimization
-
-### Performance Features
-
-- **Code Splitting**: Automatic route-based code splitting with Next.js
-- **Lazy Loading**: Components load on-demand to reduce initial bundle size
-- **Memoization**: React.memo and useMemo for expensive calculations
-- **Optimized Re-renders**: useCallback for stable function references
-- **Image Optimization**: Next.js Image component for responsive images
-- **CSS-in-JS**: TailwindCSS for minimal CSS output
-
-### Accessibility (WCAG 2.1 AA)
-
-- **Semantic HTML**: Proper use of heading hierarchy and semantic elements
-- **ARIA Labels**: Descriptive labels for screen readers
-- **Keyboard Navigation**: Full keyboard support for all interactive elements
-- **Focus Management**: Visible focus indicators and proper focus order
-- **Color Contrast**: WCAG AA compliant color combinations
-- **Reduced Motion**: Respects `prefers-reduced-motion` system preference
-- **Form Accessibility**: Proper labels and error messages for all inputs
-
-## Deployment
-
-### Deploy to Vercel (Recommended)
-
-The easiest way to deploy Focus Flow is with [Vercel](https://vercel.com):
-
-\`\`\`bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-\`\`\`
-
-Or use the button at the top of this README.
-
-### Deploy to Other Platforms
-
-Focus Flow can be deployed to any platform that supports Next.js:
-
-- **Netlify**: `npm run build` then deploy the `.next` folder
-- **GitHub Pages**: Use `next export` (static export)
-- **Docker**: Create a Dockerfile for containerized deployment
-
-## Environment Variables
-
-Focus Flow is fully frontend-based and doesn't require environment variables. However, you can optionally add:
-
-\`\`\`env
-# Optional: For analytics
-NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
-\`\`\`
-
-
-## Acknowledgments
-
-- Built with [Next.js](https://nextjs.org)
+- Built with [Next.js](https://nextjs.org) and [Express](https://expressjs.com)
 - UI components from [shadcn/ui](https://ui.shadcn.com)
 - Charts powered by [Recharts](https://recharts.org)
-- Deployed on [Vercel](https://vercel.com)
 
-
-**Start your focused work today with Focus Flow!.**
+**Start your focused journey today with Focus Flow!**
