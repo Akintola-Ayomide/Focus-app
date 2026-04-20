@@ -15,10 +15,10 @@ The first step is shifting away from `localStorage` by building a dedicated back
    - Added Email Verification and Password Reset flows with SMTP support.
    - Hardened security with API Rate Limiting and Next.js Route Middleware.
    - Established global AuthContext for seamless frontend user state management.
-- [ ] **Database Migration & ORM**: 
-   - Integrate a PostgreSQL database pairing with an ORM like Prisma or Drizzle within the specialized backend.
+- [x] **Database Migration & ORM**: 
+   - Integrate a PostgreSQL database pairing with an ORM like Prisma or Drizzle within the specialized backend. (Completed with Prisma)
    - Design schemas for `Users`, `FocusSessions`, `Habits`, and `HabitLogs`.
-- [ ] **Data Synchronization Layer**: Refactor existing state management (zustand hooks) on the Next.js frontend to securely pull and continuously push data to your custom API instead of relying on local storage, allowing for optimistic UI updates.
+- [x] **Data Synchronization Layer**: Refactor existing state management on the Next.js frontend to securely pull and continuously push data to your custom API instead of relying on local storage or external client-side SDKs, allowing for optimistic UI updates.
 - [ ] **User Profile Management**: Create a dedicated settings interface for users to manage their profile details, timezone, aesthetic preferences, and account controls.
 
 ---
