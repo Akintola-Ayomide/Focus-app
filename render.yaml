@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: focus-app-api
+    env: node
+    buildCommand: pnpm install && pnpm build --filter=api
+    startCommand: pnpm start --filter=api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: PORT
+        value: 10000
+
+  - type: web
+    name: focus-app-web
+    env: node
+    buildCommand: pnpm install && pnpm build --filter=web
+    startCommand: pnpm start --filter=web
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: ${focus-app-api.url}
