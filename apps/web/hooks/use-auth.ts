@@ -1,8 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { createClient } from "@/lib/supabase/client"
-import type { User } from "@supabase/supabase-js"
+import { apiFetch } from "@/lib/api-client"
+
+interface User {
+  id: string
+  email: string
+  display_name?: string | null
+}
 
 interface Profile {
   id: string
@@ -15,61 +20,44 @@ export function useAuth() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const fetchProfile = useCallback(async (userId: string) => {
-    const supabase = createClient()
-    const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single()
-
-    if (error) {
-      console.error("Failed to fetch profile:", error)
-      return null
+  const fetchCurrentUser = useCallback(async () => {
+    try {
+      const response = await apiFetch('/auth/me')
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+        setProfile(data.user) // Assuming user object has profile info or is the same for now
+      } else {
+        setUser(null)
+        setProfile(null)
+      }
+    } catch (error) {
+      console.error("Failed to fetch current user:", error)
+      setUser(null)
+      setProfile(null)
+    } finally {
+      setLoading(false)
     }
-
-    return data as Profile
   }, [])
 
   useEffect(() => {
-    const supabase = createClient()
-
-    // Get initial session
-    const getInitialSession = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setUser(user)
-
-      if (user) {
-        const profileData = await fetchProfile(user.id)
-        setProfile(profileData)
-      }
-
-      setLoading(false)
-    }
-
-    getInitialSession()
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null)
-
-      if (session?.user) {
-        const profileData = await fetchProfile(session.user.id)
-        setProfile(profileData)
-      } else {
-        setProfile(null)
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [fetchProfile])
+    fetchCurrentUser()
+  }, [fetchCurrentUser])
 
   const signOut = useCallback(async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    setUser(null)
-    setProfile(null)
+    try {
+      await apiFetch('/auth/logout', { method: 'POST' })
+      setUser(null)
+      setProfile(null)
+    } catch (error) {
+      console.error("Failed to sign out:", error)
+    }
   }, [])
 
-  return { user, profile, loading, signOut }
+  const login = useCallback((userData: User) => {
+    setUser(userData)
+    setProfile(userData as any)
+  }, [])
+
+  return { user, profile, loading, signOut, login }
 }

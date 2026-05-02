@@ -1,17 +1,15 @@
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
 import { Clock, Target, BarChart3, ArrowRight } from "lucide-react"
 
 export default async function LandingPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const cookieStore = await cookies()
+  const token = cookieStore.get('token')?.value
 
   // If user is logged in, redirect to dashboard
-  if (user) {
+  if (token) {
     redirect("/dashboard")
   }
 
@@ -123,7 +121,7 @@ export default async function LandingPage() {
             </div>
             <span className="font-semibold">Focus Flow</span>
           </div>
-          <p className="text-sm text-muted-foreground">Built with Next.js and Supabase</p>
+          <p className="text-sm text-muted-foreground">Built with Next.js and Custom API</p>
         </div>
       </footer>
     </div>

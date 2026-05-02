@@ -1,21 +1,16 @@
+import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
 import DashboardClient from "@/components/dashboard-client"
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
+  const cookieStore = await cookies()
+  const token = cookieStore.get('token')?.value
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
-
-  if (error || !user) {
+  if (!token) {
     redirect("/auth/login")
   }
 
-  // Fetch profile
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-
-  return <DashboardClient user={user} profile={profile} />
+  // We can fetch the user/profile here if needed, but for now we'll pass the token info
+  // or let the client handle it if DashboardClient uses useAuth
+  return <DashboardClient />
 }

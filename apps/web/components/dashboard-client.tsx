@@ -17,26 +17,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { createClient } from "@/lib/supabase/client"
-import type { User } from "@supabase/supabase-js"
-import { LogOut, UserIcon } from "lucide-react"
+import { useAuth } from "@/hooks/use-auth"
+import { LogOut, UserIcon, Loader2 } from "lucide-react"
 
-interface Profile {
-  id: string
-  email: string | null
-  display_name: string | null
-}
-
-interface DashboardClientProps {
-  user: User
-  profile: Profile | null
-}
-
-export default function DashboardClient({ user, profile }: DashboardClientProps) {
+export default function DashboardClient() {
   const [currentPage, setCurrentPage] = useState<"home" | "timer" | "habits" | "insights">("home")
   const [isDark, setIsDark] = useState(false)
   const [mounted, setMounted] = useState(false)
   const router = useRouter()
+  const { user, profile, loading, signOut } = useAuth()
 
   useEffect(() => {
     setMounted(true)
@@ -63,15 +52,20 @@ export default function DashboardClient({ user, profile }: DashboardClientProps)
   }
 
   const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await signOut()
     router.push("/")
     router.refresh()
   }
 
-  if (!mounted) return null
+  if (!mounted || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
-  const displayName = profile?.display_name || user.email?.split("@")[0] || "User"
+  const displayName = profile?.display_name || user?.email?.split("@")[0] || "User"
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -96,7 +90,7 @@ export default function DashboardClient({ user, profile }: DashboardClientProps)
                 <DropdownMenuLabel>
                   <div className="flex flex-col">
                     <span>{displayName}</span>
-                    <span className="text-xs font-normal text-muted-foreground">{user.email}</span>
+                    <span className="text-xs font-normal text-muted-foreground">{user?.email}</span>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
