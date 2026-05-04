@@ -13,7 +13,12 @@ passport.use(
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: '/api/auth/google/callback',
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (
+      accessToken: string,
+      refreshToken: string,
+      profile: any,
+      done: (error: any, user?: any) => void
+    ) => {
       try {
         const email = profile.emails?.[0].value;
         if (!email) {

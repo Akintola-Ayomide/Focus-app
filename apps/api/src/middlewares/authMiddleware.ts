@@ -7,6 +7,12 @@ export interface AuthRequest extends Request {
     id: string;
     email: string;
   };
+  // Adding these explicitly to fix TS errors when Express types are not properly picked up
+  body: any;
+  params: any;
+  query: any;
+  headers: any;
+  cookies: any;
 }
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {

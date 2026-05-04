@@ -2,8 +2,8 @@ services:
   - type: web
     name: focus-app-api
     env: node
-    buildCommand: pnpm install && pnpm build --filter=api
-    startCommand: pnpm start --filter=api
+    buildCommand: pnpm install && pnpm --filter=api run build
+    startCommand: pnpm --filter=api run start
     envVars:
       - key: NODE_ENV
         value: production
@@ -15,8 +15,8 @@ services:
   - type: web
     name: focus-app-web
     env: node
-    buildCommand: pnpm install && pnpm build --filter=web
-    startCommand: pnpm start --filter=web
+    buildCommand: pnpm install && pnpm --filter=web run build
+    startCommand: pnpm --filter=web run start
     envVars:
       - key: NODE_ENV
         value: production

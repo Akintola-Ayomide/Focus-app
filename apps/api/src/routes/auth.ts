@@ -27,7 +27,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback', 
   passport.authenticate('google', { session: false, failureRedirect: '/login?error=true' }),
-  (req, res) => {
+  (req: any, res: any) => {
     // We expect our custom Google Strategy to return an object with user and token
     const authData = req.user as { user: any, token: string };
     if (!authData || !authData.token) {
