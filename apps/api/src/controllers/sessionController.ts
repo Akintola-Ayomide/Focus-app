@@ -1,12 +1,12 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
-import { AuthRequest } from '../middlewares/authMiddleware';
 
-export const getSessions = async (req: AuthRequest, res: Response) => {
+export const getSessions = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const sessions = await prisma.focusSession.findMany({
@@ -21,11 +21,12 @@ export const getSessions = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const createSession = async (req: AuthRequest, res: Response) => {
+export const createSession = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const { duration, completedAt } = req.body;
@@ -45,11 +46,12 @@ export const createSession = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteSession = async (req: AuthRequest, res: Response) => {
+export const deleteSession = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const { id } = req.params;
@@ -59,7 +61,8 @@ export const deleteSession = async (req: AuthRequest, res: Response) => {
     });
 
     if (!session || session.userId !== userId) {
-      return res.status(404).json({ error: 'Session not found' });
+      res.status(404).json({ error: 'Session not found' });
+      return;
     }
 
     await prisma.focusSession.delete({

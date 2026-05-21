@@ -1,12 +1,12 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
-import { AuthRequest } from '../middlewares/authMiddleware';
 
-export const getHabits = async (req: AuthRequest, res: Response) => {
+export const getHabits = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const habits = await prisma.habit.findMany({
@@ -24,11 +24,12 @@ export const getHabits = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const createHabit = async (req: AuthRequest, res: Response) => {
+export const createHabit = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const { name, color, icon } = req.body;
@@ -52,18 +53,20 @@ export const createHabit = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const toggleHabitToday = async (req: AuthRequest, res: Response) => {
+export const toggleHabitToday = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const { id: habitId } = req.params;
     const { completedDate } = req.body; // Expected format: YYYY-MM-DD
 
     if (!completedDate) {
-      return res.status(400).json({ error: 'completedDate is required' });
+      res.status(400).json({ error: 'completedDate is required' });
+      return;
     }
 
     const habit = await prisma.habit.findUnique({
@@ -71,7 +74,8 @@ export const toggleHabitToday = async (req: AuthRequest, res: Response) => {
     });
 
     if (!habit || habit.userId !== userId) {
-      return res.status(404).json({ error: 'Habit not found' });
+      res.status(404).json({ error: 'Habit not found' });
+      return;
     }
 
     const existingLog = await prisma.habitLog.findUnique({
@@ -87,7 +91,8 @@ export const toggleHabitToday = async (req: AuthRequest, res: Response) => {
       await prisma.habitLog.delete({
         where: { id: existingLog.id },
       });
-      return res.json({ message: 'Habit completion removed', status: 'uncompleted' });
+      res.json({ message: 'Habit completion removed', status: 'uncompleted' });
+      return;
     } else {
       await prisma.habitLog.create({
         data: {
@@ -96,7 +101,8 @@ export const toggleHabitToday = async (req: AuthRequest, res: Response) => {
           completedDate,
         },
       });
-      return res.json({ message: 'Habit completion added', status: 'completed' });
+      res.json({ message: 'Habit completion added', status: 'completed' });
+      return;
     }
   } catch (error) {
     console.error('Toggle habit error:', error);
@@ -104,11 +110,12 @@ export const toggleHabitToday = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteHabit = async (req: AuthRequest, res: Response) => {
+export const deleteHabit = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
 
     const { id } = req.params;
@@ -118,7 +125,8 @@ export const deleteHabit = async (req: AuthRequest, res: Response) => {
     });
 
     if (!habit || habit.userId !== userId) {
-      return res.status(404).json({ error: 'Habit not found' });
+      res.status(404).json({ error: 'Habit not found' });
+      return;
     }
 
     await prisma.habit.delete({
