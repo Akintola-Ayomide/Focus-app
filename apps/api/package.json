@@ -40,6 +40,9 @@
     "@types/node": "^22.0.0",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.19.0",
+    "pg": "^8.11.0",
+    "@prisma/adapter-pg": "latest",
+    "@types/pg": "^8.11.0",
     "prisma": "latest",
     "typescript": "latest",
     "ts-node": "^10.9.2"
