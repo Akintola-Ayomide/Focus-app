@@ -9,7 +9,9 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+import { RequestHandler } from 'express';
+
+export const authenticate: RequestHandler = async (req, res, next) => {
   try {
     let token;
     

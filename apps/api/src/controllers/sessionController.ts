@@ -54,7 +54,7 @@ export const deleteSession = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const session = await prisma.focusSession.findUnique({
       where: { id },

@@ -61,7 +61,7 @@ export const toggleHabitToday = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const { id: habitId } = req.params;
+    const habitId = req.params.id as string;
     const { completedDate } = req.body; // Expected format: YYYY-MM-DD
 
     if (!completedDate) {
@@ -118,7 +118,7 @@ export const deleteHabit = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const habit = await prisma.habit.findUnique({
       where: { id },
