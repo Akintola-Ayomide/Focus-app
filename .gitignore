@@ -3,11 +3,15 @@
 # dependencies
 node_modules/
 
-# next.js
-/.next/
+# next.js (match anywhere, not just root)
+.next/
 /out/
 
+# turbo
+.turbo/
+
 # production
+dist/
 /build
 
 # debug
@@ -25,3 +29,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# OS
+.DS_Store
