@@ -11,6 +11,24 @@ services:
         sync: false
       - key: PORT
         value: 10000
+      - key: FRONTEND_URL
+        value: ${focus-app-web.url}
+      - key: BASE_URL
+        value: ${focus-app-api.url}
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
 
   - type: web
     name: focus-app-web
@@ -21,4 +39,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_API_URL
-        value: ${focus-app-api.url}
+        value: ${focus-app-api.url}/api
