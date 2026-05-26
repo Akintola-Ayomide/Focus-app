@@ -39,6 +39,7 @@ export const register = async (req: Request, res: Response): Promise<void>  => {
       html: `<h2>Welcome to Focus Flow!</h2><p>Please verify your email by clicking the link below:</p><a href="${verifyUrl}">${verifyUrl}</a>`
     });
 
+    const token = generateToken(user.id);
     res.cookie('token', token, { 
       httpOnly: true, 
       secure: process.env.NODE_ENV === 'production',
@@ -107,6 +108,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const token = generateToken(user.id);
     res.cookie('token', token, { 
       httpOnly: true, 
       secure: process.env.NODE_ENV === 'production',
