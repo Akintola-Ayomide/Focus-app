@@ -33,7 +33,7 @@ export default function LoginPage() {
       
       if (!response.ok) throw new Error(data.error || "An error occurred")
       
-      login(data.user)
+      login(data.user, data.token)
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {

@@ -35,9 +35,13 @@ router.get('/google/callback',
         return;
     }
 
-    res.cookie('token', authData.token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('token', authData.token, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+    });
     
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard?success=true`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?token=${authData.token}`);
   }
 );
 

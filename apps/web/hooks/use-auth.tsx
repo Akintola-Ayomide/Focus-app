@@ -14,7 +14,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (userData: any) => void;
+  login: (userData: any, token?: string) => void;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -47,14 +47,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshUser();
   }, []);
 
-  const login = (userData: any) => {
+  const login = (userData: any, token?: string) => {
     setUser(userData);
+    if (token) {
+      document.cookie = `token=${token}; path=/; max-age=604800; SameSite=Lax; Secure`;
+    }
     router.push('/dashboard');
   };
 
   const logout = async () => {
     await apiFetch('/auth/logout', { method: 'POST' });
     setUser(null);
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure';
     router.push('/auth/login');
   };
 
