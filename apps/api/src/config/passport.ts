@@ -5,13 +5,14 @@ import { generateToken } from './jwt';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'your-google-client-id';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'your-google-client-secret';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: `${BASE_URL}/api/auth/google/callback`,
     },
     async (
       accessToken: string,

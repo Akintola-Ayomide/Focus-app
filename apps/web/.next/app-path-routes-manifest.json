@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/auth/forgot-password/page": "/auth/forgot-password",
+  "/auth/error/page": "/auth/error",
+  "/auth/login/page": "/auth/login",
+  "/auth/sign-up-success/page": "/auth/sign-up-success",
+  "/dashboard/page": "/dashboard",
+  "/auth/verify-email/page": "/auth/verify-email",
+  "/auth/reset-password/page": "/auth/reset-password",
+  "/auth/sign-up/page": "/auth/sign-up",
+  "/page": "/"
+}
